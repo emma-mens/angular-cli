@@ -1,29 +1,47 @@
+import 'angular2-universal-polyfills';
 import { provide } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { APP_SHELL_BUILD_PROVIDERS } from '@angular/app-shell';
-import { AppComponent } from './app/';
-import {
-  REQUEST_URL,
-  ORIGIN_URL
+import { 
+  REQUEST_URL, 
+  ORIGIN_URL, 
+  Bootloader, 
+  BootloaderConfig, 
+  AppConfig 
 } from 'angular2-universal';
+import { AppComponent } from './app/';
 
-export const options = {
+const bootloaderConfig: BootloaderConfig = {
+  platformProviders: [
+    APP_SHELL_BUILD_PROVIDERS,
+    provide(ORIGIN_URL, {
+      useValue: 'http://localhost:4200' // full urls are needed for node xhr
+    }),
+    provide(APP_BASE_HREF, { useValue: '/' }),
+  ],
+  async: true,
+  preboot: false
+}
+
+const appConfig: AppConfig = {
   directives: [
     // The component that will become the main App Shell
     AppComponent
   ],
-  platformProviders: [
-    APP_SHELL_BUILD_PROVIDERS,
-    provide(ORIGIN_URL, {
-      useValue: ''
-    })
-  ],
   providers: [
     // What URL should Angular be treating the app as if navigating
-    provide(APP_BASE_HREF, {useValue: '/'}),
-    provide(REQUEST_URL, {useValue: '/'})
-  ],
-  async: false,
-  preboot: false
-};
+    provide(REQUEST_URL, { useValue: '/' })
+  ]
+}
 
+// The build system will call this function to get a bootloader
+export function getBootloader() : Bootloader  {
+  return new Bootloader(bootloaderConfig);
+}
+
+// The build system will call this function with the bootloader from 
+// getBootloader and the contents of the index page
+export function serialize(bootloader: Bootloader, template: string) : string {
+  appConfig.template = template;
+  return bootloader.serializeApplication(appConfig);
+}

@@ -14,7 +14,8 @@ module.exports = {
     { name: 'route', type: Boolean, default: false },
     { name: 'inline-template', type: Boolean, default: false, aliases: ['it'] },
     { name: 'inline-style', type: Boolean, default: false, aliases: ['is'] },
-    { name: 'prefix', type: Boolean, default: true }
+    { name: 'prefix', type: Boolean, default: true },
+    { name: 'nospec', type: Boolean, default: false }
   ],
 
   normalizeEntityName: function (entityName) {
@@ -49,12 +50,14 @@ module.exports = {
     return {
       dynamicPath: this.dynamicPath.dir.replace(this.dynamicPath.appRoot, ''),
       flat: options.flat,
+      nospec: options.nospec,
       inlineTemplate: options.inlineTemplate,
       inlineStyle: options.inlineStyle,
       route: options.route,
       isLazyRoute: !!options.isLazyRoute,
       isAppComponent: !!options.isAppComponent,
-      selector: this.selector
+      selector: this.selector,
+      styleExt: this.styleExt
     };
   },
 
@@ -72,6 +75,9 @@ module.exports = {
     }
     if (this.options && this.options.inlineStyle) {
       fileList = fileList.filter(p => p.indexOf('.__styleext__') < 0);
+    }
+    if (this.options && this.options.nospec) {
+      fileList = fileList.filter(p => p.indexOf('__name__.component.spec.ts') < 0);
     }
 
     return fileList;
@@ -114,20 +120,7 @@ module.exports = {
     }
 
     if (!options.flat) {
-      var filePath = path.join(this.project.ngConfig.defaults.sourceDir, 'system-config.ts');
-      var barrelUrl = this.appDir.replace(/\\/g, '/');
-      if (barrelUrl[0] === '/') {
-        barrelUrl = barrelUrl.substr(1);
-      }
-
-      return addBarrelRegistration(this, this.generatePath)
-        .then(() => {
-          return this.insertIntoFile(
-            filePath,
-            `  '${barrelUrl}',`,
-            { before: '  /** @cli-barrel */' }
-          );
-        });
+      return addBarrelRegistration(this, this.generatePath);
     } else {
       return addBarrelRegistration(
         this,
