@@ -16,6 +16,12 @@ This project is very much still a work in progress.
 The CLI is now in beta. 
 If you wish to collaborate while the project is still young, check out [our issue list](https://github.com/angular/angular-cli/issues).
 
+## Webpack preview release update
+
+We're updating the build system in Angular-CLI to use webpack instead of Broccoli.
+
+You can install and update your projects using [these instructions](https://github.com/angular/angular-cli/blob/master/WEBPACK_UPDATE.md).
+
 ## Prerequisites
 
 The generated project has dependencies that require **Node 4 or greater**.
@@ -206,7 +212,9 @@ You can modify the these scripts in `package.json` to run whatever tool you pref
 
 ### Support for offline applications
 
-Angular-CLI includes support for offline applications via the `--mobile` flag on `ng new`. Support is experimental, please see the angular/mobile-toolkit project and https://mobile.angular.io/ for documentation on how to make use of this functionality.
+**The `--mobile` flag has been disabled temporarily. Sorry for the inconvenience.**
+
+~~Angular-CLI includes support for offline applications via the `--` flag on `ng new`. Support is experimental, please see the angular/mobile-toolkit project and https://mobile.angular.io/ for documentation on how to make use of this functionality.~~
 
 ### Commands autocompletion
 
