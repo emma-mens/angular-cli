@@ -17,32 +17,28 @@ base command `ng generate route route-name`
 
 Build on ember cli generation blueprints but still use AST to make changes in files.
 
-Available options:
------------------
-	* route: if present, check to see if it matches any parent in `routes.ts` and insert as a child. Otherwise, insert as a parent with full route. If absent, take advantage of angular project structure to find out the parent of the current route and insert as child. If no parent exists, insert as parent 
-	* parent: if present, find parent in `routes.ts` and throw an error if not found. Insert route under this parent. if absent, use angular project structure to look for parent. 
+#### Available options: ####
+
+	* route: if present, check to see if it matches any parent in `routes.ts` and insert as a child.
+	  Otherwise, insert as a parent with full route. If absent, take advantage of angular project structure 
+	  to find out the parent of the current route and insert as child. If no parent exists, insert as parent 
+	* parent: if present, find parent in `routes.ts` and throw an error if not found. Insert route under this
+      parent. if absent, use angular project structure to look for parent. 
 	* default: set this route as the default route
 
-Validations:
------------
+#### Validations: ####
+
    * make sure component file exists: accommodate varying inputs
- 	such as `**/cmpName/cmpName`, `cmpName(.component)?(.ts)?`, `/cmpName` - searches for `cmpName` from `app` root
+     such as `**/cmpName/cmpName`, `cmpName(.component)?(.ts)?`, `/cmpName` - searches for `cmpName` from `app` root
    * make sure the component is exported
    * make sure no collision occurs in component names in routes.ts
 
-Tasks:
-------
+#### Tasks: ####
+
 	* Generate routes.ts if absent and import into app entry point
 	* Bootstrap item in entry point for app
 	* Import required classes/components
 	* Add path to `routes.ts` with correct imports
-
-Major Design Patterns/Requirements
-----------------------------------
-	* Atomicity: No file is changed until all validations are made. All changes must happen at once. 
-	* Asynchronous flow: If helper function changes a file, it must not be reflected until final stage of changes. No blocking of code for changes.
-	* Use typescript AST: walk the tree to make precise changes. Avoid rigid extraction of items of the tree so as to support different formats the user might refactor their codes into.
-	* Solve problem with as decoupled tools as possible (reusable code)
 
 Guard generation:
 ----------------
@@ -50,22 +46,31 @@ base command `ng generate guard guard-name`
 
 Use generation blueprint
 
-Available options:
-------------------
+#### Available options: ####
+ 
 	* can-activate, can-activate-child, can-deactivate: must choose one
 	* route: route to guard
 	* name: guard name. If absent, use camelized module name
 
-Validations:
-------------
+#### Validations: ####
+
 	* guard has not been added already
 	* route exists
 
-Tasks:
-------
+#### Tasks: ####
+
 	* Generate guard class with template
 	* bootstrap guard in app entry point
 	* import into routes.ts and add guard to route
+
+Major Design Patterns/Requirements 
+----------------------------------
+    * Atomicity: No file is changed until all validations are made. All changes must happen at once.
+    * Asynchronous flow: If helper function changes a file, it must not be reflected until final 
+      stage of changes. No blocking of code for changes.
+    * Use typescript AST: walk the tree to make precise changes. Avoid rigid extraction of items of 
+      the tree so as to support different formats the user might refactor their codes into.
+    * Solve problem with as decoupled tools as possible (reusable code)
 
 TESTING PLAN
 ============
